@@ -1,0 +1,282 @@
+[1]
+NAME="Nothing"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo ''
+[1-END]
+
+[2]
+NAME="Exec command"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'ls /etc'
+[902-END]
+
+[3]
+NAME="Testing with /usr/bin PATH"
+SETUP="export PATH='/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+[3-END]
+
+[4]
+NAME="Testing with /bin PATH"
+SETUP="export PATH='/bin'"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+[4-END]
+
+[5]
+NAME="run commands"
+SETUP="export PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'ls -l'
+[5-END]
+
+[6]
+NAME="setenv and unsetenv"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'setenv titi'
+  echo 'setenv tata coucou'
+  echo 'env'
+  echo '/usr/bin/env'
+  echo 'setenv var1 val1'
+  echo 'setenv var2 val2'
+[6-END]
+
+[7]
+NAME="builtin cd"
+SETUP="PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd ..'
+  echo 'ls -d'
+  echo 'cd /usr'
+  echo 'ls -d'
+[7-END]
+
+[8]
+NAME="many tab and space"
+SETUP="PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo -e "\t\t    ls\t     \t-l    \t\t  \t -a /usr   \t\t"
+[8-END]
+
+[9]
+NAME="Launch DivZero program with core dump"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "./my_divzero"
+  echo "ls"
+  echo "./my_divzero"
+[9-END]
+
+[10]
+NAME="Launch SegFault program without core dump"
+SETUP="ulimit -c 110 ; export PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo './my_segfault'
+[10-END]
+
+[11]
+NAME="Testing simple pipe"
+SETUP="export PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'ls -l /etc | grep sh'
+[11-END]
+
+[12]
+NAME="A pipe with a builtin ?"
+SETUP="export VAR1=VALEUR1 ; OLDPATH=$PATH ; PATH='/random'"
+CLEAN="PATH=$OLDPATH"
+TESTS=
+  echo 'setenv | /bin/grep VAR1'
+  echo '/bin/ls | cd /usr'
+  echo 'ls -l'
+  echo 'exit 45|cat /etc/resolv.conf'
+[12-END]
+
+[13]
+NAME="A pipe with a builtin exit"
+SETUP="export VAR1=VALEUR1 ; OLDPATH=$PATH ; PATH='/random'"
+CLEAN="PATH=$OLDPATH"
+TESTS=
+  echo 'cat /etc/resolv.conf | exit 45'
+[13-END]
+
+[14]
+NAME="A pipe with a builtin cd"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd / | azeaea'
+  echo 'pwd'
+  echo 'azea | cd /usr'
+  echo 'pwd'
+  echo 'cd /tmp/ | ls -d'
+  echo 'pwd'
+[14-END]
+
+[15]
+NAME="A pipe with bad exec output"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'ls | azeae'
+    echo 'ls | wc -l | azaea'
+    echo 'find fr | azeae'
+    echo 'ls | azeae | wc -l'
+[15-END]
+
+[16]
+NAME="a separator"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo ';ls'
+    echo ';'
+[16-END]
+
+[17]
+NAME="a simple pipe"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo '|'
+    echo '| ls'
+[17-END]
+
+[18]
+NAME="parenthese"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'ls ;(ls ;(ls -l))'
+[18-END]
+
+[19]
+NAME="quote"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo ''"'/usr'
+[19-END]
+
+[20]
+NAME="other separator multipl"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'ls && cat README || cat tests'
+[20-END]
+
+[21]
+NAME="other separator"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'ls && cat README'
+[21-END]
+
+[22]
+NAME="other separator"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo "te || cat tests"
+[22-END]
+
+[23]
+NAME="built in where basic"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'where ls'
+[23-END]
+
+[24]
+NAME="complex where"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'where'
+    echo 'where grep'
+    echo 'where eazea'
+[24-END]
+
+[25]
+NAME="which nothing"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+    echo 'which'
+[25-END]
+
+[26]
+NAME="which and built in "
+SETUP="export TERM=xterm ; PATH='/usr/local/bin'"
+CLEAN=""
+TESTS=
+    echo 'which cd'
+[26-END]
+
+[27]
+NAME="which simple"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/local/bin'"
+CLEAN=""
+TESTS=
+    echo 'which find'
+[27-END]
+
+[101]
+NAME="parenthese basic"
+SETUP="export TERM=xterm ; PATH='/usr/local/bin'"
+CLEAN=""
+TESTS=
+    echo '(cd ..); ls'
+    echo '(cd ..; ls)'
+[101-END]
+
+
+[102]
+NAME="magic quote basic"
+SETUP="export TERM=xterm ; PATH='/usr/local/bin'"
+CLEAN=""
+TESTS=
+    echo 'ls `ls`'
+[102-END]
+
+[103]
+NAME="magic quote medium"
+SETUP="export TERM=xterm ; PATH='/usr/local/bin'"
+CLEAN=""
+TESTS=
+    echo 'ls `ls` | cat -e > mquotetest; cat mquotetest | cat -e; rm mquotetest'
+[103-END]
+
